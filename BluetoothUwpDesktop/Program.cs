@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Google.Protobuf;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace BluetoothUwpDesktop
 {
     class Program
     {
-        private static readonly Guid MyidServiceId = Guid.Parse("0000b710-0000-1000-8000-00805f9b34fb");
+        private static readonly Guid ServiceId = Guid.Parse("0000b710-0000-1000-8000-00805f9b34fb");
 
         static async Task Main(string[] args)
         {
@@ -43,6 +44,7 @@ namespace BluetoothUwpDesktop
             };
 
             // BT_Code: Example showing paired and non-paired in a single query.
+            // https://docs.microsoft.com/en-us/windows/uwp/devices-sensors/enumerate-devices-over-a-network
             string aqsAllBluetoothLEDevices = "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")";
 
             var deviceWatcher =
@@ -65,8 +67,16 @@ namespace BluetoothUwpDesktop
 
             foreach (var c in Subscriptions)
             {
-                var bytes = System.Text.Encoding.ASCII.GetBytes("Hello").AsBuffer();
-                await c.WriteValueAsync(bytes, GattWriteOption.WriteWithResponse);
+                var m = new com.intercede.BluetoothSmartcard.Commands.SignatureRequest
+                {
+                    Plaintext = ByteString.CopyFromUtf8("Lorem ipsum dolor sit amet")
+                };
+                var bytes = new byte[(m.CalculateSize())];
+                var stream = new CodedOutputStream(bytes);
+                m.WriteTo(stream);
+
+                Log.Logger.Information("=> {data}", bytes.AsHex());
+                await c.WriteValueAsync(bytes.AsBuffer(), GattWriteOption.WriteWithResponse);
             }
 
             Console.ReadKey();
@@ -102,16 +112,16 @@ namespace BluetoothUwpDesktop
 
             Log.Logger.Information("Device services: {services}", result.Services.Select(x => x.Uuid));
 
-            var myidService = result.Services.FirstOrDefault(x => x.Uuid == MyidServiceId);
-            if (myidService == null)
+            var service = result.Services.FirstOrDefault(x => x.Uuid == ServiceId);
+            if (service == null)
             {
-                Log.Logger.Warning("Couldn't find MyID service on {name}", args.Name);
+                Log.Logger.Warning("Couldn't find our service on {name}", args.Name);
                 return;
             }
 
-            Log.Logger.Information("Found MyID service");
+            Log.Logger.Information("Found  service");
 
-            var characteristics = await myidService.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
+            var characteristics = await service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
 
             Log.Logger.Information("Found {characteristics}", characteristics.Characteristics.Select(x => x.Uuid));
 
@@ -119,14 +129,12 @@ namespace BluetoothUwpDesktop
             {
                 if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
                 {
-                    //Log.Logger.Information("Characteristic {id} is notifiable", c.Uuid);
-
                     await c.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
 
                     c.ValueChanged += (_, changedArgs) =>
                     {
                         var bytes = changedArgs.CharacteristicValue.ToArray();
-                        Log.Logger.Information("Event! {data}", System.Convert.ToBase64String(bytes));
+                        Log.Logger.Information("Event! {data}", bytes.AsHex());
                     };
 
                     Subscriptions.Add(c);
@@ -149,5 +157,11 @@ namespace BluetoothUwpDesktop
 
         private static void DeviceWatcher_Stopped(DeviceWatcher sender, object args)
             => Log.Logger.Information("");
+    }
+
+    public static class Hextension
+    {
+        public static string AsHex(this byte[] bytes)
+            => string.Join("", bytes.Select(c => ((int)c).ToString("X2")));
     }
 }

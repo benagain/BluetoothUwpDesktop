@@ -14,18 +14,13 @@ namespace BluetoothUwpDesktop
             var skip = 3;
             while (true)
             {
-                var stack = new StackFrame(skip);
-                //if (!stack.GetMethod() == null)
-                //{
-                //    logEvent.AddPropertyIfAbsent(new LogEventProperty("Caller", new ScalarValue("<unknown method>")));
-                //    return;
-                //}
+                var method = new StackFrame(skip).GetMethod();
+                if (method == null)
+                    return;
 
-                var method = stack.GetMethod();
                 if (method.DeclaringType.Assembly != typeof(Log).Assembly)
                 {
-                    var caller = $"{method.Name}";
-                    logEvent.AddPropertyIfAbsent(new LogEventProperty("Caller", new ScalarValue(caller)));
+                    logEvent.AddPropertyIfAbsent(new LogEventProperty("Caller", new ScalarValue(method.Name)));
                 }
 
                 skip++;

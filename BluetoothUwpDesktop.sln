@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27428.2011
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothUwpDesktop", "BluetoothUwpDesktop\BluetoothUwpDesktop.csproj", "{AA10AFF7-B5A2-44FA-9B7E-373049463ADE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyidBluetoothCredentialProvider", "MyidBluetoothCredentialProvider\MyidBluetoothCredentialProvider.csproj", "{6C8807C1-FBB3-4389-895E-F46B18B24E80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{526F390F-E03D-4A41-BDC7-2A07BA5B1304}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{AA10AFF7-B5A2-44FA-9B7E-373049463ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA10AFF7-B5A2-44FA-9B7E-373049463ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA10AFF7-B5A2-44FA-9B7E-373049463ADE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C8807C1-FBB3-4389-895E-F46B18B24E80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C8807C1-FBB3-4389-895E-F46B18B24E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C8807C1-FBB3-4389-895E-F46B18B24E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C8807C1-FBB3-4389-895E-F46B18B24E80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{526F390F-E03D-4A41-BDC7-2A07BA5B1304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{526F390F-E03D-4A41-BDC7-2A07BA5B1304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{526F390F-E03D-4A41-BDC7-2A07BA5B1304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{526F390F-E03D-4A41-BDC7-2A07BA5B1304}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

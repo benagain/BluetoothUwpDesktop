@@ -2,6 +2,7 @@
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
@@ -11,16 +12,13 @@ using Windows.Devices.Enumeration;
 
 namespace BluetoothUwpDesktop
 {
-    class Program
+    public class Program
     {
         private static readonly Guid ServiceId = Guid.Parse("0000b710-0000-1000-8000-00805f9b34fb");
 
         static async Task Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.WithCaller()
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] ({Caller}) {Message}{NewLine}{Exception}")
-                .CreateLogger();
+            ConfigureLogger();
 
             try
             {
@@ -30,6 +28,21 @@ namespace BluetoothUwpDesktop
             {
                 System.Console.WriteLine(e.Message);
             }
+        }
+
+        public static void ConfigureLogger()
+        {
+            Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.WithCaller()
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] ({Caller}) {Message}{NewLine}{Exception}")
+                .WriteTo.File(@"c:\temp\log.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.Trace()
+                .MinimumLevel.Verbose()
+                .CreateLogger();
+
+            Log.Information("Log file created");
         }
 
         private static List<GattCharacteristic> Subscriptions = new List<GattCharacteristic>();

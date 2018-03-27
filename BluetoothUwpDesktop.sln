@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyidBluetoothCredentialProvider", "MyidBluetoothCredentialProvider\MyidBluetoothCredentialProvider.csproj", "{6C8807C1-FBB3-4389-895E-F46B18B24E80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{526F390F-E03D-4A41-BDC7-2A07BA5B1304}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6C8807C1-FBB3-4389-895E-F46B18B24E80} = {6C8807C1-FBB3-4389-895E-F46B18B24E80}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

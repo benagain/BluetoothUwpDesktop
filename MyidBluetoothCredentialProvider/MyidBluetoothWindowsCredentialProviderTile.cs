@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using CredentialProvider.Interop;
 using Serilog;
@@ -8,21 +9,56 @@ namespace MyidBluetoothCredentialProvider
 {
     internal class MyidBluetoothWindowsCredentialProviderTile : IMyidBluetoothWindowsCredentialProviderTile
     {
-        private IReadOnlyList<_CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR> UiElements = new List<_CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR>
+        private class CredentialDescriptor
         {
-            new _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR
+            public _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR Descriptor { get; set; }
+            public _CREDENTIAL_PROVIDER_FIELD_STATE State { get; set; }
+        }
+
+        private CredentialDescriptor[] UiElements = CreateUi();
+        private Ui Ui = CreateUi2();
+
+        private static Ui CreateUi2()
+        {
+            return new UiBuilder()
+                .Text("MyID Bluetooth", Display.InMenuAndSelection)
+                .Text("Blue it!", Display.InSelection)
+                .Build();
+        }
+
+        private static CredentialDescriptor[] CreateUi()
+        {
+            return new[]
             {
-                cpft = _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SMALL_TEXT,
-                dwFieldID = 0,
-                pszLabel = "MyID Bluetooth",
-            },
-            new _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR
-            {
-                cpft = _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SUBMIT_BUTTON,
-                dwFieldID = 1,
-                pszLabel = "Login",
+                new CredentialDescriptor
+                {
+                    State = _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
+                    Descriptor = new _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR
+                    {
+                        cpft = _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SMALL_TEXT,
+                        pszLabel = "MyID Bluetooth",
+                    },
+                },
+                new CredentialDescriptor
+                {
+                    State = _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
+                    Descriptor = new _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR
+                    {
+                        cpft = _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SMALL_TEXT,
+                        pszLabel = "Blue it!",
+                    },
+                },
             }
-        };
+            .Select((x, i) =>
+            {
+                var d = x.Descriptor;
+                d.dwFieldID = (uint)i;
+                x.Descriptor = d;
+                return x;
+            })
+            .ToArray();
+        }
+
         private ICredentialProviderCredentialEvents events;
 
         public MyidBluetoothWindowsCredentialProviderTile(
@@ -32,36 +68,41 @@ namespace MyidBluetoothCredentialProvider
 
         }
 
-        public int UiElementCount => UiElements.Count;
+        public int UiElementCount => UiElements.Length;
 
         public int Advise(ICredentialProviderCredentialEvents pcpce)
         {
             events = pcpce;
             var intPtr = Marshal.GetIUnknownForObject(pcpce);
             Marshal.AddRef(intPtr);
-            return 0;
+            return HResultValues.S_OK;
         }
 
-        public int UnAdvise() => throw new NotImplementedException();
+        public int UnAdvise()
+        {
+            Marshal.Release(Marshal.GetIUnknownForObject(events));
+            events = null;
+            return HResultValues.S_OK;
+        }
+
         public int SetSelected(out int pbAutoLogon)
         {
             pbAutoLogon = 0;
-            return 0; ;
+            return HResultValues.S_OK;
         }
 
         public int SetDeselected() => throw new NotImplementedException();
 
         public int GetFieldState(uint dwFieldID, out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs, out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis)
         {
-            pcpfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE;
-            pcpfs = _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH;
-            return 0;
+            (pcpfs, pcpfis) = Ui.GetState(dwFieldID);
+            return HResultValues.S_OK;
         }
 
         public int GetStringValue(uint dwFieldID, out string ppsz)
         {
-            ppsz = "Hello bob!";
-            return 0;
+            ppsz = UiElements[dwFieldID].Descriptor.pszLabel;
+            return HResultValues.S_OK;
         }
 
         public int GetBitmapValue(uint dwFieldID, IntPtr phbmp) => throw new NotImplementedException();
@@ -69,7 +110,7 @@ namespace MyidBluetoothCredentialProvider
         public int GetSubmitButtonValue(uint dwFieldID, out uint pdwAdjacentTo)
         {
             pdwAdjacentTo = 0;
-            return 0;
+            return HResultValues.S_OK;
         }
 
         public int GetComboBoxValueCount(uint dwFieldID, out uint pcItems, out uint pdwSelectedItem) => throw new NotImplementedException();
@@ -156,10 +197,10 @@ namespace MyidBluetoothCredentialProvider
 
         internal void DescribeUi(uint dwIndex, IntPtr ppcpfd)
         {
-            if (dwIndex > UiElements.Count)
+            if (dwIndex > UiElements.Length)
                 throw new ArgumentOutOfRangeException(nameof(dwIndex));
 
-            var listItem = UiElements[(int)dwIndex];
+            var listItem = UiElements[(int)dwIndex].Descriptor;
             var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(listItem)); /* _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR* */
             Marshal.StructureToPtr(listItem, pcpfd, false); /* pcpfd = &CredentialProviderFieldDescriptorList */
             Marshal.StructureToPtr(pcpfd, ppcpfd, false); /* *ppcpfd = pcpfd */

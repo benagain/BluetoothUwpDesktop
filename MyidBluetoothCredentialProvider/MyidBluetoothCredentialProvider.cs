@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using CredentialProvider.Interop;
+using CredProvider.NET.Interop;
 using Serilog;
 
 namespace MyidBluetoothCredentialProvider
@@ -13,7 +13,7 @@ namespace MyidBluetoothCredentialProvider
     {
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO usageScenario;
         private readonly Lazy<MyidBluetoothWindowsCredentialProviderTile> credentialTile;
-        private uint eventsContext;
+        private ulong eventsContext;
         private ICredentialProviderEvents events;
 
         static MyidBluetoothCredentialProvider()
@@ -52,7 +52,7 @@ namespace MyidBluetoothCredentialProvider
             throw new NotImplementedException();
         }
 
-        public int Advise(ICredentialProviderEvents pcpe, uint upAdviseContext)
+        public int Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext)
         {
             Log.Debug("Advise({pcpe}, {upAdviseContext})", pcpe, upAdviseContext);
 

@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using CredentialProvider.Interop;
+using CredProvider.NET.Interop;
 
 namespace MyidBluetoothCredentialProvider
 {

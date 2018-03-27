@@ -1,4 +1,4 @@
-﻿using CredentialProvider.Interop;
+﻿using CredProvider.NET.Interop;
 using Headspring;
 using System;
 using System.Collections.Generic;

@@ -16,9 +16,6 @@
             {
                 Console.WriteLine("No credential detected.");
             }
-
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
         }
     }
 }

@@ -5,6 +5,7 @@ using System;
 //using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Net;
 using System.Runtime.InteropServices;
 
@@ -111,7 +112,7 @@ namespace MyidBluetoothCredentialProvider
 
         private static System.Drawing.Bitmap icon;
 
-        public int GetBitmapValue(uint dwFieldID, IntPtr phbmp)
+        public int GetBitmapValue(uint dwFieldID, out IntPtr phbmp)
         {
             Log.Verbose("dwFieldID: {dwFieldID}");
 
@@ -134,8 +135,7 @@ namespace MyidBluetoothCredentialProvider
         {
             using (var web = new WebClient())
             {
-                //var bytes = web.DownloadData("https://lh3.googleusercontent.com/-sKxso2c379oy6UlCtymwwPKXO8ODsNXKhYH5fiMaX5_MdWotJEiRq4aYZYZnmkQpw=w300");
-                var bytes = web.DownloadData("https://syfuhs.blob.core.windows.net/images/2015/12/mad.jpg");
+                var bytes = web.DownloadData("https://lh3.googleusercontent.com/-sKxso2c379oy6UlCtymwwPKXO8ODsNXKhYH5fiMaX5_MdWotJEiRq4aYZYZnmkQpw=w300");
 
                 var image = System.Drawing.Image.FromStream(new MemoryStream(bytes));
 
@@ -239,6 +239,15 @@ namespace MyidBluetoothCredentialProvider
         internal void DescribeUi(uint dwIndex, IntPtr ppcpfd)
         {
             Ui.DescribeInto(dwIndex, ppcpfd);
+        }
+
+        public int GetUserSid(out string sid)
+        {
+            var search = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_UserAccount where name='Ben.Arnold'");
+            sid = search.Get().Cast<ManagementBaseObject>().FirstOrDefault()?["SID"] as string;
+            return string.IsNullOrEmpty(sid)
+                ? HResultValues.E_FAIL
+                : HResultValues.S_OK;
         }
     }
 }

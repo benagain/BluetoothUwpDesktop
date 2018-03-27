@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using CredentialProvider.Interop;
+﻿using CredProvider.NET.Interop;
 using Serilog;
+using System;
+//using System.Drawing;
+//using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
 
 namespace MyidBluetoothCredentialProvider
 {
@@ -21,6 +24,7 @@ namespace MyidBluetoothCredentialProvider
         private static Ui CreateUi2()
         {
             return new UiBuilder()
+                .Icon(Display.InMenuAndSelection)
                 .Text("MyID Bluetooth", Display.InMenuAndSelection)
                 .Text("Blue it!", Display.InSelection)
                 .Build();
@@ -68,7 +72,7 @@ namespace MyidBluetoothCredentialProvider
 
         }
 
-        public int UiElementCount => UiElements.Length;
+        public int UiElementCount => (int)Ui.ElementCount;
 
         public int Advise(ICredentialProviderCredentialEvents pcpce)
         {
@@ -101,11 +105,48 @@ namespace MyidBluetoothCredentialProvider
 
         public int GetStringValue(uint dwFieldID, out string ppsz)
         {
-            ppsz = UiElements[dwFieldID].Descriptor.pszLabel;
+            ppsz = Ui.GetString(dwFieldID);
             return HResultValues.S_OK;
         }
 
-        public int GetBitmapValue(uint dwFieldID, IntPtr phbmp) => throw new NotImplementedException();
+        private static System.Drawing.Bitmap icon;
+
+        public int GetBitmapValue(uint dwFieldID, IntPtr phbmp)
+        {
+            Log.Verbose("dwFieldID: {dwFieldID}");
+
+            try
+            {
+                icon = TryLoadUserIcon();
+                phbmp = icon?.GetHbitmap() ?? IntPtr.Zero;
+                return HResultValues.S_OK;
+            }
+            catch (Exception ex)
+            {
+                Log.Verbose(ex, "Error");
+                throw;
+            }
+
+
+        }
+
+        private System.Drawing.Bitmap TryLoadUserIcon()
+        {
+            using (var web = new WebClient())
+            {
+                //var bytes = web.DownloadData("https://lh3.googleusercontent.com/-sKxso2c379oy6UlCtymwwPKXO8ODsNXKhYH5fiMaX5_MdWotJEiRq4aYZYZnmkQpw=w300");
+                var bytes = web.DownloadData("https://syfuhs.blob.core.windows.net/images/2015/12/mad.jpg");
+
+                var image = System.Drawing.Image.FromStream(new MemoryStream(bytes));
+
+                var imageStream = new MemoryStream();
+                image.Save(imageStream, System.Drawing.Imaging.ImageFormat.Bmp);
+                imageStream.Seek(0, SeekOrigin.Begin);
+
+                return new System.Drawing.Bitmap(imageStream);
+            }
+        }
+
         public int GetCheckboxValue(uint dwFieldID, out int pbChecked, out string ppszLabel) => throw new NotImplementedException();
         public int GetSubmitButtonValue(uint dwFieldID, out uint pdwAdjacentTo)
         {
@@ -197,13 +238,7 @@ namespace MyidBluetoothCredentialProvider
 
         internal void DescribeUi(uint dwIndex, IntPtr ppcpfd)
         {
-            if (dwIndex > UiElements.Length)
-                throw new ArgumentOutOfRangeException(nameof(dwIndex));
-
-            var listItem = UiElements[(int)dwIndex].Descriptor;
-            var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(listItem)); /* _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR* */
-            Marshal.StructureToPtr(listItem, pcpfd, false); /* pcpfd = &CredentialProviderFieldDescriptorList */
-            Marshal.StructureToPtr(pcpfd, ppcpfd, false); /* *ppcpfd = pcpfd */
+            Ui.DescribeInto(dwIndex, ppcpfd);
         }
     }
 }

@@ -1,0 +1,18 @@
+<ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra" >
+
+	<info organisation="myid.platform" module="SharedHeaderFiles" e:svnurl="${svnURL}" e:svnrev="${svnRevision}"/>
+
+	<configurations>
+		<conf name="source"/>
+	</configurations>
+
+	<publications>
+		<artifact name="${moduleName}" type="include" ext="zip" conf="source" />
+	</publications>
+
+	<dependencies>
+	</dependencies>
+</ivy-module>
+
+
+

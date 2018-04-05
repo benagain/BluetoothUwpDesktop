@@ -134,49 +134,8 @@ _Check_return_ KSP_STATUS WINAPI OpenKey(
 
 	auto keyHandle = handle->FindKey(pszKeyName);
 
-	*phKey = reinterpret_cast<NCRYPT_KEY_HANDLE>(keyHandle.GetInterfacePtr());
+	*phKey = reinterpret_cast<NCRYPT_KEY_HANDLE>(keyHandle.release());
 
-	//
-//    //Initialize the key object.
-//    Status=CreateNewKeyObject(pszKeyName,&pKey);
-//    if(Status != ERROR_SUCCESS)
-//    {
-//        goto cleanup;
-//    }
-//
-//    //Get path to user's key file.
-//    Status = GetSampleKeyStorageArea(&pKey->pszKeyFilePath);
-//    if(Status != ERROR_SUCCESS)
-//    {
-//        goto cleanup;
-//    }
-//
-//    //Read and validate key file header from the key file.
-//    Status = ReadKeyFile(pKey);
-//    if(Status != ERROR_SUCCESS)
-//    {
-//        goto cleanup;
-//    }
-//
-//    //Parse key file.
-//    Status=ParseKeyFile(pKey);
-//    if(Status != ERROR_SUCCESS)
-//    {
-//        goto cleanup;
-//    }
-//
-//    pKey->fFinished = TRUE;
-//    *phKey = (NCRYPT_KEY_HANDLE)pKey;
-//    pKey = NULL;
-//    Status = ERROR_SUCCESS;
-//
-//cleanup:
-//
-//    if(pKey)
-//    {
-//        DeleteKeyObject(pKey);
-//    }
-//
 	return ERROR_SUCCESS;
 }
 
@@ -340,15 +299,9 @@ _Check_return_ KSP_STATUS WINAPI GetKeyProperty(
 	_Out_   DWORD * pcbResult,						///< Required size of the output buffer
 	_In_    DWORD   dwFlags)						///< flags
 {
-	ProviderHandle* handle = ValidateProviderHandle(hProvider);
-	if (handle == nullptr)
+	auto key = ValidateKeyHandle(hProvider, hKey);
+	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
-
-	/*KeyHandle* key = ValidateKeyHandle(hKey);*/
-	auto keyHandle = (MyidBlueKsp::IBlueKey*)hKey;
-	if (keyHandle == nullptr)
-		return NTE_INVALID_HANDLE;
-	MyidBlueKsp::IBlueKeyPtr key(keyHandle);
 
 	if ((pszProperty == nullptr) ||
 		(wcslen(pszProperty) > NCRYPT_MAX_PROPERTY_NAME) ||
@@ -410,7 +363,7 @@ _Check_return_ KSP_STATUS WINAPI GetKeyProperty(
 	else if (wcscmp(pszProperty, NCRYPT_NAME_PROPERTY) == 0)
 	{
 		property = KSP_NAME_PROPERTY;
-		cbResult = static_cast<DWORD>((key->Name.length() + 1) * sizeof(WCHAR));
+		cbResult = static_cast<DWORD>((key->key->Name.length() + 1) * sizeof(WCHAR));
 	}
 	//    else if(wcscmp(pszProperty, NCRYPT_SECURITY_DESCR_PROPERTY) == 0)
 	//    {
@@ -437,7 +390,7 @@ _Check_return_ KSP_STATUS WINAPI GetKeyProperty(
 	else if (wcscmp(pszProperty, NCRYPT_UNIQUE_NAME_PROPERTY) == 0)
 	{
 		property = KSP_UNIQUE_NAME_PROPERTY;
-		cbResult = static_cast<DWORD>((key->Name.length() + 1) * sizeof(WCHAR));
+		cbResult = static_cast<DWORD>((key->key->Name.length() + 1) * sizeof(WCHAR));
 	}
 	//else if (wcscmp(pszProperty, NCRYPT_USE_CONTEXT_PROPERTY) == 0)
 	//{
@@ -447,7 +400,7 @@ _Check_return_ KSP_STATUS WINAPI GetKeyProperty(
 	else if (wcscmp(pszProperty, NCRYPT_CERTIFICATE_PROPERTY) == 0)
 	{
 		property = KSP_CERTIFICATE_PROPERTY;
-		cbResult = (DWORD)key->NumCertificateBytes; //the size of the certificate that is associated with the key
+		cbResult = (DWORD)key->key->NumCertificateBytes; //the size of the certificate that is associated with the key
 	}
 	else
 	{
@@ -513,7 +466,7 @@ _Check_return_ KSP_STATUS WINAPI GetKeyProperty(
 		//
 	case KSP_NAME_PROPERTY:
 	case KSP_UNIQUE_NAME_PROPERTY:
-		memcpy(pbOutput, (const wchar_t*)key->Name, cbResult);
+		memcpy(pbOutput, (const wchar_t*)key->key->Name, cbResult);
 		break;
 
 	//case KSP_USE_CONTEXT_PROPERTY:
@@ -530,7 +483,7 @@ _Check_return_ KSP_STATUS WINAPI GetKeyProperty(
 
 	case KSP_CERTIFICATE_PROPERTY:
 	{
-		auto psa = key->Certificate;
+		auto psa = key->key->Certificate;
 		BYTE* buffer;
 
 		SafeArrayAccessData(psa, (void**)&buffer);
@@ -626,7 +579,7 @@ _Check_return_ KSP_STATUS WINAPI SetKeyProperty(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -641,7 +594,7 @@ _Check_return_ KSP_STATUS WINAPI SetKeyProperty(
 
 	if (wcscmp(pszProperty, NCRYPT_USE_CONTEXT_PROPERTY) == 0)
 	{
-		key->context = reinterpret_cast<LPCWCHAR>(pbInput);
+		key->ChangeContext(reinterpret_cast<LPCWCHAR>(pbInput));
 	}
 	else
 	{
@@ -681,7 +634,7 @@ _Check_return_ KSP_STATUS WINAPI FinalizeKey(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -766,7 +719,7 @@ SECURITY_STATUS WINAPI DeleteKey(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -794,11 +747,7 @@ SECURITY_STATUS WINAPI FreeKey(
 	_In_    NCRYPT_PROV_HANDLE hProvider,			///< provider handle
 	_In_    NCRYPT_KEY_HANDLE hKey)					///< key handle
 {
-	ProviderHandle* handle = ValidateProviderHandle(hProvider);
-	if (handle == nullptr)
-		return NTE_INVALID_HANDLE;
-
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -840,7 +789,7 @@ _Check_return_ KSP_STATUS WINAPI Encrypt(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -859,9 +808,13 @@ _Check_return_ KSP_STATUS WINAPI Encrypt(
 		return NTE_BAD_FLAGS;
 	}
 
-	NTSTATUS status = BCryptEncrypt(key->publicKey, pbInput, cbInput, pPaddingInfo, nullptr, 0, pbOutput, cbOutput, pcbResult, dwFlags);
+	UNREFERENCED_PARAMETER(cbOutput);
+	UNREFERENCED_PARAMETER(pbOutput);
+	UNREFERENCED_PARAMETER(pPaddingInfo);
+	//NTSTATUS status = BCryptEncrypt(key->publicKey, pbInput, cbInput, pPaddingInfo, nullptr, 0, pbOutput, cbOutput, pcbResult, dwFlags);
+	//return AdjustNtStatus(status);
 
-	return AdjustNtStatus(status);
+	return NTE_INTERNAL_ERROR;
 }
 //
 ///******************************************************************************
@@ -915,7 +868,7 @@ _Check_return_ KSP_STATUS WINAPI Decrypt(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -1428,7 +1381,7 @@ _Check_return_ KSP_STATUS WINAPI ExportKey(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -1541,7 +1494,7 @@ _Check_return_ KSP_STATUS WINAPI ExportKey(
 {
 	try
 	{
-		auto key = ValidateKeyHandle2(hProvider, hKey);
+		auto key = ValidateKeyHandle(hProvider, hKey);
 		if (key == nullptr)
 			return NTE_INVALID_HANDLE;
 
@@ -1555,14 +1508,14 @@ _Check_return_ KSP_STATUS WINAPI ExportKey(
 
 		if (pbSignature == nullptr)
 		{
-			*pcbResult = (DWORD)key->CalculateSignatureSize(array, MyidBlueKsp::HashAlgorithm_Pkcs1);
+			*pcbResult = key->CalculateSignatureSize(array, MyidBlueKsp::HashAlgorithm_Pkcs1);
 		}
 		else
 		{
-			auto signature = TakeControl(key->Sign(array));
-			if (!ByteArrayIntoBuffer(signature, cbSignature, pbSignature))
-				return NTE_BUFFER_TOO_SMALL;
-			*pcbResult = signature.GetCount();
+			//auto signature = TakeControl(key->Sign(array));
+			//if (!ByteArrayIntoBuffer(signature, cbSignature, pbSignature))
+			//	return NTE_BUFFER_TOO_SMALL;
+			//*pcbResult = signature.GetCount();
 		}
 
 		UNREFERENCED_PARAMETER(pPaddingInfo);
@@ -1608,7 +1561,7 @@ _Check_return_ KSP_STATUS WINAPI ExportKey(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -1622,10 +1575,13 @@ _Check_return_ KSP_STATUS WINAPI ExportKey(
 	{
 		return NTE_BAD_FLAGS;
 	}
+	
+	UNREFERENCED_PARAMETER(pPaddingInfo);
 
-	NTSTATUS status = BCryptVerifySignature(key->publicKey, pPaddingInfo, pbHashValue, cbHashValue, pbSignature, cbSignature, dwFlags);
+	//NTSTATUS status = BCryptVerifySignature(key->publicKey, pPaddingInfo, pbHashValue, cbHashValue, pbSignature, cbSignature, dwFlags);
+	//return AdjustNtStatus(status);
 
-	return AdjustNtStatus(status);
+	return NTE_INTERNAL_ERROR;
 }
 
 /// Prompt the user
@@ -1641,7 +1597,7 @@ SECURITY_STATUS WINAPI PromptUser(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -1681,11 +1637,11 @@ _Check_return_ KSP_STATUS WINAPI SecretAgreement(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* privKey = ValidateKeyHandle(hPrivKey);
+	auto privKey = ValidateKeyHandle(hProvider, hPrivKey);
 	if (privKey == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* pubKey = ValidateKeyHandle(hPubKey);
+	auto pubKey = ValidateKeyHandle(hProvider, hPubKey);
 	if (pubKey == nullptr)
 		return NTE_INVALID_HANDLE;
 
@@ -1749,7 +1705,7 @@ _Check_return_ KSP_STATUS WINAPI KeyDerivation(
 	if (handle == nullptr)
 		return NTE_INVALID_HANDLE;
 
-	KeyHandle* key = ValidateKeyHandle(hKey);
+	auto key = ValidateKeyHandle(hProvider, hKey);
 	if (key == nullptr)
 		return NTE_INVALID_HANDLE;
 

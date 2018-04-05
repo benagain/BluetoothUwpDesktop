@@ -1,16 +1,20 @@
 #include "stdafx.h"
 #include "ProviderHandle.h"
+#include "KeyHandle.h"
+
+#import "../MyidBlueKsp/bin/Debug/MyidBlueKsp.tlb"
+
 
 ProviderHandle::ProviderHandle()
 	: magic(PROVIDER_MAGIC)
-	, ksp(__uuidof(MyidBlueKsp::BlueKsp))
+	, ksp(new MyidBlueKsp::IBlueKspPtr(__uuidof(MyidBlueKsp::BlueKsp)))
 {}
 
 
 NCryptKeyName* ProviderHandle::EnumerateKeys(unsigned long numAlreadySeen)
 {
 	if(enumeratedKeys == nullptr)
-		enumeratedKeys = ksp->EnumerateKeys2();
+		enumeratedKeys = (*ksp)->EnumerateKeys2();
 
 	auto numElements = enumeratedKeys->rgsabound->cElements;
 	
@@ -26,12 +30,12 @@ NCryptKeyName* ProviderHandle::EnumerateKeys(unsigned long numAlreadySeen)
 	return keyName;
 }
 
-MyidBlueKsp::IBlueKeyPtr ProviderHandle::FindKey(const wchar_t* searchName)
+std::unique_ptr<KeyHandle> ProviderHandle::FindKey(const wchar_t* searchName)
 {
 	UNREFERENCED_PARAMETER(searchName);
 
 	if (enumeratedKeys == nullptr)
-		enumeratedKeys = ksp->EnumerateKeys2();
+		enumeratedKeys = (*ksp)->EnumerateKeys2();
 
 	auto numElements = enumeratedKeys->rgsabound->cElements;
 
@@ -43,7 +47,7 @@ MyidBlueKsp::IBlueKeyPtr ProviderHandle::FindKey(const wchar_t* searchName)
 
 		auto keyName = kkey->Name;
 		if (keyName == _bstr_t(searchName))
-			return kkey;
+			return std::make_unique<KeyHandle>(MyidBlueKsp::IBlueKeyPtr(kkey));
 	}
 
 	return {};
@@ -60,15 +64,3 @@ _Success_(return != NULL) ProviderHandle* ValidateProviderHandle(_In_ NCRYPT_PRO
 
 	return handle;
 }
-
-_Success_(return != NULL) MyidBlueKsp::IBlueKeyPtr ValidateKeyHandle2(_In_ NCRYPT_PROV_HANDLE provider, _In_ NCRYPT_KEY_HANDLE key)
-{
-	if (ValidateProviderHandle(provider) == nullptr)
-		return nullptr;
-
-	if (key == 0)
-		return nullptr;
-
-	return reinterpret_cast<MyidBlueKsp::IBlueKey*>(key);
-}
-

@@ -1,6 +1,10 @@
 #pragma once
 
+#include <memory>
 #import "../MyidBlueKsp/bin/Debug/MyidBlueKsp.tlb"
+
+class KeyHandle;
+#include "KeyHandle.h"
 
 #define PROVIDER_MAGIC 0x4D795068      // MyPh
 
@@ -13,16 +17,15 @@ public:
 	std::wstring		name;		///< name of the KSP
 	std::wstring		context;	///< context string
 
-	MyidBlueKsp::IBlueKspPtr ksp;		///< Managed KSP
+	MyidBlueKsp::IBlueKspPtr* ksp;		///< Managed KSP
 
 	NCryptKeyName* EnumerateKeys(unsigned long numAlreadySeen);
 
-	MyidBlueKsp::IBlueKeyPtr FindKey(const wchar_t* name);
+	std::unique_ptr<KeyHandle> FindKey(const wchar_t* name);
 
 private:
 	SAFEARRAY * enumeratedKeys = nullptr;
 };
 
 _Success_(return != NULL) ProviderHandle* ValidateProviderHandle(_In_ NCRYPT_PROV_HANDLE provider);
-_Success_(return != NULL) MyidBlueKsp::IBlueKeyPtr ValidateKeyHandle2(_In_ NCRYPT_PROV_HANDLE provider, _In_ NCRYPT_KEY_HANDLE key);
 

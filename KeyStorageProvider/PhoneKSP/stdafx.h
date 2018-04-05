@@ -11,6 +11,7 @@
 
 #include <windows.h>
 #include <wincrypt.h>
+#include <atlsafe.h>
 #include <bcrypt.h>
 #include <ncrypt.h>
 #include "..\CPDK\Include\bcrypt_provider.h"

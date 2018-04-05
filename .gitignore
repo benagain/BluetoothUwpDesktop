@@ -92,6 +92,7 @@ ipch/
 
 # TFS 2012 Local Workspace
 $tf/
+.svn
 
 # Guidance Automation Toolkit
 *.gpState
@@ -259,6 +260,15 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-/KeyStorageProvider/InstallPhoneKSP/VC15
-/KeyStorageProvider/PhoneKSP/VC15
-/KeyStorageProvider/SharedHeaderFiles/.svn
+
+# OpenCover UI analysis results
+OpenCover/
+
+# MSBuild Binary and Structured Log
+*.binlog
+
+dependencies/
+.ivy/
+.bootstrap.xml
+
+**/VC[0-9][0-9]/

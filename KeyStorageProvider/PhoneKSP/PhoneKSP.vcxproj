@@ -56,24 +56,29 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_UML|Win32'">
-    <Import Project="..\SharedHeaderFiles\VS2015\Configuration.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_UML|Win32'">
-    <Import Project="..\SharedHeaderFiles\VS2015\Configuration.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_UML|x64'">
-    <Import Project="..\SharedHeaderFiles\VS2015\Configuration.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_UML|x64'">
-    <Import Project="..\SharedHeaderFiles\VS2015\Configuration.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\dependencies\include\SharedHeaderFiles\VS2017\Configuration.props" />
+    <Import Project="..\..\dependencies\include\SharedHeaderFiles\VS2017\BuildInProjParentDir.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UML|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(VC)\$(ProjectName)\$(Configuration)$(PlatformSuffix)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\Obj</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UML|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(VC)\$(ProjectName)\$(Configuration)$(PlatformSuffix)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\Obj</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_UML|Win32'">
+    <OutDir>$(SolutionDir)$(VC)\$(ProjectName)\$(Configuration)$(PlatformSuffix)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\Obj</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_UML|x64'">
+    <OutDir>$(SolutionDir)$(VC)\$(ProjectName)\$(Configuration)$(PlatformSuffix)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\Obj</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_UML|Win32'">
     <Link>
@@ -88,7 +93,7 @@
       <AdditionalLibraryDirectories>..\CPDK\Lib\win8\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetDir)$(TargetName)* C:\Windows\Sysnative</Command>
+      <Command>copy "$(TargetDir)$(TargetName)*" C:\Windows\Sysnative</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_UML|Win32'">

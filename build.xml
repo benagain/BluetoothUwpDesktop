@@ -1,0 +1,11 @@
+﻿<project name="BluetoothUwpDesktop" default="test">
+	<get src="http://webtools.intercede.com/Ivy/latest/bootstrap.xml" dest=".bootstrap.xml" skipexisting="true" quiet="true"/>
+	<import file=".bootstrap.xml" />
+	<import file="${dependency.dir}/scripts/Tools.Build.Platform/build_platform.xml" />
+
+	<target name="moduleZip">
+	</target>
+
+	<target name="clean-module" depends="clean-module32, clean-module64, clean-module32.UMD, clean-module64.UMD, clean_deps" />
+
+</project>

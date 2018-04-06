@@ -68,6 +68,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PacketBuilder.cs" />
+    <Compile Include="TestBuilder.cs" />
     <Compile Include="TestChunker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

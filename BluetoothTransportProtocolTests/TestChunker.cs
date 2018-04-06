@@ -8,7 +8,7 @@ namespace BluetoothTransportProtocolTests
     public class TestPacketChunker
     {
         [Fact]
-        public void Chunks200BytesOver20Mtu()
+        public void Chunks_bytes_into_multiples_of_mtu_size()
         {
             byte[] total = Enumerable.Range(0, 200).Select(x => (byte)x).ToArray();
 
@@ -18,7 +18,7 @@ namespace BluetoothTransportProtocolTests
         }
 
         [Fact]
-        public void Chunks200BytesOver20MtuContent()
+        public void Chunks_bytes_with_correct_content()
         {
             byte[] total = Enumerable.Range(0, 200).Select(x => (byte)x).ToArray();
 
@@ -32,22 +32,13 @@ namespace BluetoothTransportProtocolTests
         }
 
         [Fact]
-        public void ChunkAddsEOMPacket()
+        public void Appends_EOM_packet()
         {
             byte[] total = Enumerable.Range(0, 10).Select(x => (byte)x).ToArray();
 
             var chunks = new PacketChunker(20).Chunks(total).ToArray();
 
             chunks.Should().HaveCount(2);
-        }
-
-        [Fact]
-        public void ChunkAddsEOMValue()
-        {
-            byte[] total = Enumerable.Range(0, 10).Select(x => (byte)x).ToArray();
-
-            var chunks = new PacketChunker(20).Chunks(total).ToArray();
-
             chunks[1].Should().BeEquivalentTo("EOM");
         }
     }

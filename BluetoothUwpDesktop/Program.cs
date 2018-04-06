@@ -27,10 +27,10 @@ namespace BluetoothUwpDesktop
             }
             catch (System.Exception e)
             {
-                Console.WriteLine(e.Message);
+                Log.Error(e, "boom!");
             }
         }
-
+        
         public static void ConfigureLogger()
         {
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
@@ -80,22 +80,37 @@ namespace BluetoothUwpDesktop
 
             deviceWatcher.Stop();
 
-            foreach (var c in foundDevices)
+            await Task.Run(async () =>
             {
-                var m = new com.intercede.BluetoothSmartcard.Commands.SignatureRequest
+                foreach (var c in foundDevices)
                 {
-                    Plaintext = ByteString.CopyFromUtf8("Lorem ipsum dolor sit amet")
-                };
-                var bytes = new byte[(m.CalculateSize())];
-                var stream = new CodedOutputStream(bytes);
-                m.WriteTo(stream);
+                    var sd = new com.intercede.BluetoothSmartcard.Commands.Command
+                    {
+                        SignData = new com.intercede.BluetoothSmartcard.Commands.SignData
+                        {
+                            Request = new com.intercede.BluetoothSmartcard.Commands.SignatureRequest
+                            {
+                                Plaintext = ByteString.CopyFromUtf8(new string('a', 10))
+                            }
+                        }
+                    };
+                    //var m = new com.intercede.BluetoothSmartcard.Commands.SignatureRequest
+                    //{
+                    //    Plaintext = ByteString.CopyFromUtf8(new string('a', 530))
+                    //    //Plaintext = ByteString.CopyFromUtf8("Loren ipsum")
+                    //};
+                    //var bytes = new byte[(m.CalculateSize())];
+                    //var stream = new CodedOutputStream(bytes);
+                    //m.WriteTo(stream);
 
-                Log.Logger.Information("=> {data}", bytes.AsHex());
+                    //Log.Logger.Information("=> {data}", bytes.AsHex());
 
-                //c.WriteEverything(bytes);
+                    await c.SendCommandAsync(sd);
+                    //c.WriteEverything(bytes);
 
-                //await c.WriteValueAsync(bytes.AsBuffer(), GattWriteOption.WriteWithResponse);
-            }
+                    //await c.WriteValueAsync(bytes.AsBuffer(), GattWriteOption.WriteWithResponse);
+                }
+            });
 
             Console.ReadKey();
 
@@ -113,7 +128,7 @@ namespace BluetoothUwpDesktop
         {
             try
             {
-                Log.Logger.Information("{id} {name}", args.Id, args.Name);
+                //Log.Logger.Information("{id} {name}", args.Id, args.Name);
 
                 if (args.Name != "iPhone 6+") return;
 

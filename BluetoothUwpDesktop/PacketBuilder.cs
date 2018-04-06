@@ -24,7 +24,8 @@ namespace Bluetooth.Transport
         {
             if (block.SequenceEqual(System.Text.Encoding.UTF8.GetBytes("EOM")))
             {
-                OnCompletedPacket.Invoke(this, new PacketEventArgs(GetCompletedPacket()));
+                OnCompletedPacket?.Invoke(this, new PacketEventArgs(GetCompletedPacket()));
+                blocks.Clear();
             }
             else
             {

@@ -25,26 +25,34 @@ namespace com.intercede.BluetoothSmartcard.Commands {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChdjcmVkZW50aWFsc2VydmljZS5wcm90bxITYmx1ZXRvb3RoLnNtYXJ0Y2Fy",
-            "ZBofZ29vZ2xlL3Byb3RvYnVmL3RpbWVzdGFtcC5wcm90bxoZZ29vZ2xlL3By",
-            "b3RvYnVmL2FwaS5wcm90byJdChFDcmVkZW50aWFsUmVxdWVzdCJICghLZXlV",
-            "c2FnZRIMCghOT19VU0FHRRAAEggKBFNJR04QARILCgdFTkNSWVBUEAISCgoG",
-            "VkVSSUZZEAQSCwoHREVDUllQVBAIIjQKCkNyZWRlbnRpYWwSEgoKaWRlbnRp",
-            "ZmllchgBIAEoDBISCgpjcmVkZW50aWFsGAIgASgMIkoKEkNyZWRlbnRpYWxS",
-            "ZXNwb25zZRI0CgtjcmVkZW50aWFscxgBIAMoCzIfLmJsdWV0b290aC5zbWFy",
-            "dGNhcmQuQ3JlZGVudGlhbCIlChBTaWduYXR1cmVSZXF1ZXN0EhEKCXBsYWlu",
-            "dGV4dBgBIAEoDCImChFTaWduYXR1cmVSZXNwb25zZRIRCglzaWduYXR1cmUY",
-            "ASABKAwy0gEKEUNyZWRlbnRpYWxTZXJ2aWNlEmIKD1JlYWRDcmVkZW50aWFs",
-            "cxImLmJsdWV0b290aC5zbWFydGNhcmQuQ3JlZGVudGlhbFJlcXVlc3QaJy5i",
-            "bHVldG9vdGguc21hcnRjYXJkLkNyZWRlbnRpYWxSZXNwb25zZRJZCghTaWdu",
-            "RGF0YRIlLmJsdWV0b290aC5zbWFydGNhcmQuU2lnbmF0dXJlUmVxdWVzdBom",
-            "LmJsdWV0b290aC5zbWFydGNhcmQuU2lnbmF0dXJlUmVzcG9uc2VCagopY29t",
-            "LmludGVyY2VkZS5ibHVldG9vdGhzbWFydGNhcmQuY29tbWFuZHNCDlNpZ25E",
-            "YXRhUHJvdG9zgAEBqgIpY29tLmludGVyY2VkZS5CbHVldG9vdGhTbWFydGNh",
-            "cmQuQ29tbWFuZHNiBnByb3RvMw=="));
+            "ZCKEAQoHQ29tbWFuZBIxCghzaWduRGF0YRgBIAEoCzIdLmJsdWV0b290aC5z",
+            "bWFydGNhcmQuU2lnbkRhdGFIABI/Cg9yZWFkQ3JlZGVudGlhbHMYAiABKAsy",
+            "JC5ibHVldG9vdGguc21hcnRjYXJkLlJlYWRDcmVkZW50aWFsc0gAQgUKA2Nt",
+            "ZCKNAQoIU2lnbkRhdGESOAoHcmVxdWVzdBgBIAEoCzIlLmJsdWV0b290aC5z",
+            "bWFydGNhcmQuU2lnbmF0dXJlUmVxdWVzdEgAEjoKCHJlc3BvbnNlGAIgASgL",
+            "MiYuYmx1ZXRvb3RoLnNtYXJ0Y2FyZC5TaWduYXR1cmVSZXNwb25zZUgAQgsK",
+            "CWRpcmVjdGlvbiKWAQoPUmVhZENyZWRlbnRpYWxzEjkKB3JlcXVlc3QYASAB",
+            "KAsyJi5ibHVldG9vdGguc21hcnRjYXJkLkNyZWRlbnRpYWxSZXF1ZXN0SAAS",
+            "OwoIcmVzcG9uc2UYAiABKAsyJy5ibHVldG9vdGguc21hcnRjYXJkLkNyZWRl",
+            "bnRpYWxSZXNwb25zZUgAQgsKCWRpcmVjdGlvbiKdAQoRQ3JlZGVudGlhbFJl",
+            "cXVlc3QSPgoFdXNhZ2UYASABKA4yLy5ibHVldG9vdGguc21hcnRjYXJkLkNy",
+            "ZWRlbnRpYWxSZXF1ZXN0LktleVVzYWdlIkgKCEtleVVzYWdlEgwKCE5PX1VT",
+            "QUdFEAASCAoEU0lHThABEgsKB0VOQ1JZUFQQAhIKCgZWRVJJRlkQBBILCgdE",
+            "RUNSWVBUEAgiNAoKQ3JlZGVudGlhbBISCgppZGVudGlmaWVyGAEgASgMEhIK",
+            "CmNyZWRlbnRpYWwYAiABKAwiSgoSQ3JlZGVudGlhbFJlc3BvbnNlEjQKC2Ny",
+            "ZWRlbnRpYWxzGAEgAygLMh8uYmx1ZXRvb3RoLnNtYXJ0Y2FyZC5DcmVkZW50",
+            "aWFsIiUKEFNpZ25hdHVyZVJlcXVlc3QSEQoJcGxhaW50ZXh0GAEgASgMIiYK",
+            "EVNpZ25hdHVyZVJlc3BvbnNlEhEKCXNpZ25hdHVyZRgBIAEoDEJqCiljb20u",
+            "aW50ZXJjZWRlLmJsdWV0b290aHNtYXJ0Y2FyZC5jb21tYW5kc0IOU2lnbkRh",
+            "dGFQcm90b3OAAQGqAiljb20uaW50ZXJjZWRlLkJsdWV0b290aFNtYXJ0Y2Fy",
+            "ZC5Db21tYW5kc2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.ApiReflection.Descriptor, },
+          new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest), global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest.Parser, null, null, new[]{ typeof(global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest.Types.KeyUsage) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::com.intercede.BluetoothSmartcard.Commands.Command), global::com.intercede.BluetoothSmartcard.Commands.Command.Parser, new[]{ "SignData", "ReadCredentials" }, new[]{ "Cmd" }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::com.intercede.BluetoothSmartcard.Commands.SignData), global::com.intercede.BluetoothSmartcard.Commands.SignData.Parser, new[]{ "Request", "Response" }, new[]{ "Direction" }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::com.intercede.BluetoothSmartcard.Commands.ReadCredentials), global::com.intercede.BluetoothSmartcard.Commands.ReadCredentials.Parser, new[]{ "Request", "Response" }, new[]{ "Direction" }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest), global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest.Parser, new[]{ "Usage" }, null, new[]{ typeof(global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest.Types.KeyUsage) }, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.intercede.BluetoothSmartcard.Commands.Credential), global::com.intercede.BluetoothSmartcard.Commands.Credential.Parser, new[]{ "Identifier", "Credential_" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.intercede.BluetoothSmartcard.Commands.CredentialResponse), global::com.intercede.BluetoothSmartcard.Commands.CredentialResponse.Parser, new[]{ "Credentials" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.intercede.BluetoothSmartcard.Commands.SignatureRequest), global::com.intercede.BluetoothSmartcard.Commands.SignatureRequest.Parser, new[]{ "Plaintext" }, null, null, null),
@@ -55,6 +63,622 @@ namespace com.intercede.BluetoothSmartcard.Commands {
 
   }
   #region Messages
+  /// <summary>
+  /// Command is the top-level message that is transmitted between
+  /// PC and mobile device.
+  /// </summary>
+  public sealed partial class Command : pb::IMessage<Command> {
+    private static readonly pb::MessageParser<Command> _parser = new pb::MessageParser<Command>(() => new Command());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Command> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[0]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Command() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Command(Command other) : this() {
+      switch (other.CmdCase) {
+        case CmdOneofCase.SignData:
+          SignData = other.SignData.Clone();
+          break;
+        case CmdOneofCase.ReadCredentials:
+          ReadCredentials = other.ReadCredentials.Clone();
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Command Clone() {
+      return new Command(this);
+    }
+
+    /// <summary>Field number for the "signData" field.</summary>
+    public const int SignDataFieldNumber = 1;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.intercede.BluetoothSmartcard.Commands.SignData SignData {
+      get { return cmdCase_ == CmdOneofCase.SignData ? (global::com.intercede.BluetoothSmartcard.Commands.SignData) cmd_ : null; }
+      set {
+        cmd_ = value;
+        cmdCase_ = value == null ? CmdOneofCase.None : CmdOneofCase.SignData;
+      }
+    }
+
+    /// <summary>Field number for the "readCredentials" field.</summary>
+    public const int ReadCredentialsFieldNumber = 2;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.intercede.BluetoothSmartcard.Commands.ReadCredentials ReadCredentials {
+      get { return cmdCase_ == CmdOneofCase.ReadCredentials ? (global::com.intercede.BluetoothSmartcard.Commands.ReadCredentials) cmd_ : null; }
+      set {
+        cmd_ = value;
+        cmdCase_ = value == null ? CmdOneofCase.None : CmdOneofCase.ReadCredentials;
+      }
+    }
+
+    private object cmd_;
+    /// <summary>Enum of possible cases for the "cmd" oneof.</summary>
+    public enum CmdOneofCase {
+      None = 0,
+      SignData = 1,
+      ReadCredentials = 2,
+    }
+    private CmdOneofCase cmdCase_ = CmdOneofCase.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CmdOneofCase CmdCase {
+      get { return cmdCase_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void ClearCmd() {
+      cmdCase_ = CmdOneofCase.None;
+      cmd_ = null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Command);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Command other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(SignData, other.SignData)) return false;
+      if (!object.Equals(ReadCredentials, other.ReadCredentials)) return false;
+      if (CmdCase != other.CmdCase) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (cmdCase_ == CmdOneofCase.SignData) hash ^= SignData.GetHashCode();
+      if (cmdCase_ == CmdOneofCase.ReadCredentials) hash ^= ReadCredentials.GetHashCode();
+      hash ^= (int) cmdCase_;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (cmdCase_ == CmdOneofCase.SignData) {
+        output.WriteRawTag(10);
+        output.WriteMessage(SignData);
+      }
+      if (cmdCase_ == CmdOneofCase.ReadCredentials) {
+        output.WriteRawTag(18);
+        output.WriteMessage(ReadCredentials);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (cmdCase_ == CmdOneofCase.SignData) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(SignData);
+      }
+      if (cmdCase_ == CmdOneofCase.ReadCredentials) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ReadCredentials);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Command other) {
+      if (other == null) {
+        return;
+      }
+      switch (other.CmdCase) {
+        case CmdOneofCase.SignData:
+          if (SignData == null) {
+            SignData = new global::com.intercede.BluetoothSmartcard.Commands.SignData();
+          }
+          SignData.MergeFrom(other.SignData);
+          break;
+        case CmdOneofCase.ReadCredentials:
+          if (ReadCredentials == null) {
+            ReadCredentials = new global::com.intercede.BluetoothSmartcard.Commands.ReadCredentials();
+          }
+          ReadCredentials.MergeFrom(other.ReadCredentials);
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            global::com.intercede.BluetoothSmartcard.Commands.SignData subBuilder = new global::com.intercede.BluetoothSmartcard.Commands.SignData();
+            if (cmdCase_ == CmdOneofCase.SignData) {
+              subBuilder.MergeFrom(SignData);
+            }
+            input.ReadMessage(subBuilder);
+            SignData = subBuilder;
+            break;
+          }
+          case 18: {
+            global::com.intercede.BluetoothSmartcard.Commands.ReadCredentials subBuilder = new global::com.intercede.BluetoothSmartcard.Commands.ReadCredentials();
+            if (cmdCase_ == CmdOneofCase.ReadCredentials) {
+              subBuilder.MergeFrom(ReadCredentials);
+            }
+            input.ReadMessage(subBuilder);
+            ReadCredentials = subBuilder;
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class SignData : pb::IMessage<SignData> {
+    private static readonly pb::MessageParser<SignData> _parser = new pb::MessageParser<SignData>(() => new SignData());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<SignData> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SignData() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SignData(SignData other) : this() {
+      switch (other.DirectionCase) {
+        case DirectionOneofCase.Request:
+          Request = other.Request.Clone();
+          break;
+        case DirectionOneofCase.Response:
+          Response = other.Response.Clone();
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SignData Clone() {
+      return new SignData(this);
+    }
+
+    /// <summary>Field number for the "request" field.</summary>
+    public const int RequestFieldNumber = 1;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.intercede.BluetoothSmartcard.Commands.SignatureRequest Request {
+      get { return directionCase_ == DirectionOneofCase.Request ? (global::com.intercede.BluetoothSmartcard.Commands.SignatureRequest) direction_ : null; }
+      set {
+        direction_ = value;
+        directionCase_ = value == null ? DirectionOneofCase.None : DirectionOneofCase.Request;
+      }
+    }
+
+    /// <summary>Field number for the "response" field.</summary>
+    public const int ResponseFieldNumber = 2;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.intercede.BluetoothSmartcard.Commands.SignatureResponse Response {
+      get { return directionCase_ == DirectionOneofCase.Response ? (global::com.intercede.BluetoothSmartcard.Commands.SignatureResponse) direction_ : null; }
+      set {
+        direction_ = value;
+        directionCase_ = value == null ? DirectionOneofCase.None : DirectionOneofCase.Response;
+      }
+    }
+
+    private object direction_;
+    /// <summary>Enum of possible cases for the "direction" oneof.</summary>
+    public enum DirectionOneofCase {
+      None = 0,
+      Request = 1,
+      Response = 2,
+    }
+    private DirectionOneofCase directionCase_ = DirectionOneofCase.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DirectionOneofCase DirectionCase {
+      get { return directionCase_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void ClearDirection() {
+      directionCase_ = DirectionOneofCase.None;
+      direction_ = null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as SignData);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(SignData other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Request, other.Request)) return false;
+      if (!object.Equals(Response, other.Response)) return false;
+      if (DirectionCase != other.DirectionCase) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (directionCase_ == DirectionOneofCase.Request) hash ^= Request.GetHashCode();
+      if (directionCase_ == DirectionOneofCase.Response) hash ^= Response.GetHashCode();
+      hash ^= (int) directionCase_;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (directionCase_ == DirectionOneofCase.Request) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Request);
+      }
+      if (directionCase_ == DirectionOneofCase.Response) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Response);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (directionCase_ == DirectionOneofCase.Request) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Request);
+      }
+      if (directionCase_ == DirectionOneofCase.Response) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Response);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(SignData other) {
+      if (other == null) {
+        return;
+      }
+      switch (other.DirectionCase) {
+        case DirectionOneofCase.Request:
+          if (Request == null) {
+            Request = new global::com.intercede.BluetoothSmartcard.Commands.SignatureRequest();
+          }
+          Request.MergeFrom(other.Request);
+          break;
+        case DirectionOneofCase.Response:
+          if (Response == null) {
+            Response = new global::com.intercede.BluetoothSmartcard.Commands.SignatureResponse();
+          }
+          Response.MergeFrom(other.Response);
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            global::com.intercede.BluetoothSmartcard.Commands.SignatureRequest subBuilder = new global::com.intercede.BluetoothSmartcard.Commands.SignatureRequest();
+            if (directionCase_ == DirectionOneofCase.Request) {
+              subBuilder.MergeFrom(Request);
+            }
+            input.ReadMessage(subBuilder);
+            Request = subBuilder;
+            break;
+          }
+          case 18: {
+            global::com.intercede.BluetoothSmartcard.Commands.SignatureResponse subBuilder = new global::com.intercede.BluetoothSmartcard.Commands.SignatureResponse();
+            if (directionCase_ == DirectionOneofCase.Response) {
+              subBuilder.MergeFrom(Response);
+            }
+            input.ReadMessage(subBuilder);
+            Response = subBuilder;
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class ReadCredentials : pb::IMessage<ReadCredentials> {
+    private static readonly pb::MessageParser<ReadCredentials> _parser = new pb::MessageParser<ReadCredentials>(() => new ReadCredentials());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ReadCredentials> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ReadCredentials() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ReadCredentials(ReadCredentials other) : this() {
+      switch (other.DirectionCase) {
+        case DirectionOneofCase.Request:
+          Request = other.Request.Clone();
+          break;
+        case DirectionOneofCase.Response:
+          Response = other.Response.Clone();
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ReadCredentials Clone() {
+      return new ReadCredentials(this);
+    }
+
+    /// <summary>Field number for the "request" field.</summary>
+    public const int RequestFieldNumber = 1;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest Request {
+      get { return directionCase_ == DirectionOneofCase.Request ? (global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest) direction_ : null; }
+      set {
+        direction_ = value;
+        directionCase_ = value == null ? DirectionOneofCase.None : DirectionOneofCase.Request;
+      }
+    }
+
+    /// <summary>Field number for the "response" field.</summary>
+    public const int ResponseFieldNumber = 2;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.intercede.BluetoothSmartcard.Commands.CredentialResponse Response {
+      get { return directionCase_ == DirectionOneofCase.Response ? (global::com.intercede.BluetoothSmartcard.Commands.CredentialResponse) direction_ : null; }
+      set {
+        direction_ = value;
+        directionCase_ = value == null ? DirectionOneofCase.None : DirectionOneofCase.Response;
+      }
+    }
+
+    private object direction_;
+    /// <summary>Enum of possible cases for the "direction" oneof.</summary>
+    public enum DirectionOneofCase {
+      None = 0,
+      Request = 1,
+      Response = 2,
+    }
+    private DirectionOneofCase directionCase_ = DirectionOneofCase.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DirectionOneofCase DirectionCase {
+      get { return directionCase_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void ClearDirection() {
+      directionCase_ = DirectionOneofCase.None;
+      direction_ = null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ReadCredentials);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ReadCredentials other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Request, other.Request)) return false;
+      if (!object.Equals(Response, other.Response)) return false;
+      if (DirectionCase != other.DirectionCase) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (directionCase_ == DirectionOneofCase.Request) hash ^= Request.GetHashCode();
+      if (directionCase_ == DirectionOneofCase.Response) hash ^= Response.GetHashCode();
+      hash ^= (int) directionCase_;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (directionCase_ == DirectionOneofCase.Request) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Request);
+      }
+      if (directionCase_ == DirectionOneofCase.Response) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Response);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (directionCase_ == DirectionOneofCase.Request) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Request);
+      }
+      if (directionCase_ == DirectionOneofCase.Response) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Response);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ReadCredentials other) {
+      if (other == null) {
+        return;
+      }
+      switch (other.DirectionCase) {
+        case DirectionOneofCase.Request:
+          if (Request == null) {
+            Request = new global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest();
+          }
+          Request.MergeFrom(other.Request);
+          break;
+        case DirectionOneofCase.Response:
+          if (Response == null) {
+            Response = new global::com.intercede.BluetoothSmartcard.Commands.CredentialResponse();
+          }
+          Response.MergeFrom(other.Response);
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest subBuilder = new global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest();
+            if (directionCase_ == DirectionOneofCase.Request) {
+              subBuilder.MergeFrom(Request);
+            }
+            input.ReadMessage(subBuilder);
+            Request = subBuilder;
+            break;
+          }
+          case 18: {
+            global::com.intercede.BluetoothSmartcard.Commands.CredentialResponse subBuilder = new global::com.intercede.BluetoothSmartcard.Commands.CredentialResponse();
+            if (directionCase_ == DirectionOneofCase.Response) {
+              subBuilder.MergeFrom(Response);
+            }
+            input.ReadMessage(subBuilder);
+            Response = subBuilder;
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
   public sealed partial class CredentialRequest : pb::IMessage<CredentialRequest> {
     private static readonly pb::MessageParser<CredentialRequest> _parser = new pb::MessageParser<CredentialRequest>(() => new CredentialRequest());
     private pb::UnknownFieldSet _unknownFields;
@@ -63,7 +687,7 @@ namespace com.intercede.BluetoothSmartcard.Commands {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[0]; }
+      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -80,12 +704,24 @@ namespace com.intercede.BluetoothSmartcard.Commands {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public CredentialRequest(CredentialRequest other) : this() {
+      usage_ = other.usage_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public CredentialRequest Clone() {
       return new CredentialRequest(this);
+    }
+
+    /// <summary>Field number for the "usage" field.</summary>
+    public const int UsageFieldNumber = 1;
+    private global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest.Types.KeyUsage usage_ = 0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest.Types.KeyUsage Usage {
+      get { return usage_; }
+      set {
+        usage_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -101,12 +737,14 @@ namespace com.intercede.BluetoothSmartcard.Commands {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (Usage != other.Usage) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (Usage != 0) hash ^= Usage.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -120,6 +758,10 @@ namespace com.intercede.BluetoothSmartcard.Commands {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+      if (Usage != 0) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Usage);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -128,6 +770,9 @@ namespace com.intercede.BluetoothSmartcard.Commands {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (Usage != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Usage);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -138,6 +783,9 @@ namespace com.intercede.BluetoothSmartcard.Commands {
     public void MergeFrom(CredentialRequest other) {
       if (other == null) {
         return;
+      }
+      if (other.Usage != 0) {
+        Usage = other.Usage;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -150,6 +798,10 @@ namespace com.intercede.BluetoothSmartcard.Commands {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
+          case 8: {
+            usage_ = (global::com.intercede.BluetoothSmartcard.Commands.CredentialRequest.Types.KeyUsage) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -179,7 +831,7 @@ namespace com.intercede.BluetoothSmartcard.Commands {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[1]; }
+      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -336,7 +988,7 @@ namespace com.intercede.BluetoothSmartcard.Commands {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[2]; }
+      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -457,7 +1109,7 @@ namespace com.intercede.BluetoothSmartcard.Commands {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[3]; }
+      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -586,7 +1238,7 @@ namespace com.intercede.BluetoothSmartcard.Commands {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[4]; }
+      get { return global::com.intercede.BluetoothSmartcard.Commands.CredentialserviceReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

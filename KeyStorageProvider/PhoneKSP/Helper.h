@@ -18,3 +18,21 @@ enum Property
 
 SECURITY_STATUS AdjustNtStatus(_In_ NTSTATUS NtStatus);
 
+//void ValidatePointers();// {}
+//
+//template<typename T, typename... Args>
+//void ValidatePointers(T p, Args... args)
+//{
+//	if (p == nullptr) return;
+//	ValidatePointers(args...);
+//}
+
+inline tl::expected<bool, SECURITY_STATUS> ValidatePointers() { return {}; }
+
+template<typename T, typename... Args>
+tl::expected<bool, SECURITY_STATUS> ValidatePointers(T p, Args... args)
+{
+	if (p == nullptr) return tl::make_unexpected(NTE_INVALID_PARAMETER);
+	return ValidatePointers(args...);
+
+}

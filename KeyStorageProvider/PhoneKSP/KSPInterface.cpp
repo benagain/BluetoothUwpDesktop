@@ -125,18 +125,71 @@ _Check_return_ KSP_STATUS WINAPI OpenKey(
 	UNREFERENCED_PARAMETER(dwLegacyKeySpec);
 	UNREFERENCED_PARAMETER(dwFlags);
 
-	ProviderHandle* handle = ValidateProviderHandle(hProvider);
-	if (handle == nullptr)
+	try
+	{
+		auto ValidateProviser = [&](bool) { return ValidateProviderHandle2(hProvider); };
+
+		auto FindKey = [&](ProviderHandle* provider) 
+		{
+			return provider->FindKey2(pszKeyName); 
+		};
+
+		auto ReturnKeyHandle = [&](std::unique_ptr<KeyHandle> key) 
+		{
+			*phKey = reinterpret_cast<NCRYPT_KEY_HANDLE>(key.release());
+		};
+
+
+		//auto k = ValidatePointers(phKey, pszKeyName)
+		//	.map(ValidateProviser)
+		//	//.and_then(ValidateProviser)
+		//	.map(FindKey)
+		//	//.map(ReturnKeyHandle);
+
+		////auto handle = ValidateProviderHandle2(hProvider);
+		////if (!handle) return handle.error();
+		////auto x = handle
+		////	.and_then(FindKey)
+		////	.map(ReturnKeyHandle)
+		////	;
+
+		//if (k) 
+			//return ERROR_SUCCESS;
+		//else 
+		//	return k.error();
+
+		//(*handle)->FindKey2(pszKeyName)
+		//	.and_then(FindKey)
+		//	.map(ReturnKeyHandle);
+
+		//auto key = (*handle)->FindKey2(pszKeyName)
+		//	.map([](std::unique_ptr<KeyHandle>& k) { return k.release(); })
+		//	.map([&](auto& k) { *phKey = reinterpret_cast<NCRYPT_KEY_HANDLE>(k); return ERROR_SUCCESS; });
+
+		//return key ? *key : key.error();
+			/*.and_then([]() {}*/;
+
+		//return 
+
+		//	.and_then([](auto k) { return k.release(); });
+
+
+		//	.and_then(ValidateProviderHandle2)
+		//auto handle = ValidateProviderHandle(hProvider);
+
+		//auto p = ValidatePointers(phKey, pszKeyName);
+		//if (!p) return p.error();
+
+		//auto keyHandle = handle->FindKey(pszKeyName);
+
+		//*phKey = reinterpret_cast<NCRYPT_KEY_HANDLE>(keyHandle.release());
+
+		return ERROR_SUCCESS;
+	}
+	catch (...)
+	{
 		return NTE_INVALID_HANDLE;
-
-	if ((phKey == nullptr) || (pszKeyName == nullptr))
-		return  NTE_INVALID_PARAMETER;
-
-	auto keyHandle = handle->FindKey(pszKeyName);
-
-	*phKey = reinterpret_cast<NCRYPT_KEY_HANDLE>(keyHandle.release());
-
-	return ERROR_SUCCESS;
+	}
 }
 
 /// Create a new key

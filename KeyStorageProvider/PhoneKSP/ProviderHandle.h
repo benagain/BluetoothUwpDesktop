@@ -22,10 +22,12 @@ public:
 	NCryptKeyName* EnumerateKeys(unsigned long numAlreadySeen);
 
 	std::unique_ptr<KeyHandle> FindKey(const wchar_t* name);
+	tl::expected<std::unique_ptr<KeyHandle>, SECURITY_STATUS> FindKey2(const wchar_t* name);
 
 private:
 	SAFEARRAY * enumeratedKeys = nullptr;
 };
 
+tl::expected<ProviderHandle*, SECURITY_STATUS> ValidateProviderHandle2(_In_ NCRYPT_PROV_HANDLE provider);
 _Success_(return != NULL) ProviderHandle* ValidateProviderHandle(_In_ NCRYPT_PROV_HANDLE provider);
 

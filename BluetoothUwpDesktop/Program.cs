@@ -46,8 +46,8 @@ namespace BluetoothUwpDesktop
             Log.Information("Log file created");
         }
 
-        private static List<GattCharacteristic> Subscriptions = new List<GattCharacteristic>();
-        private static List<PacketChunker> Chunkers = new List<PacketChunker>();
+        //private static List<GattCharacteristic> Subscriptions = new List<GattCharacteristic>();
+        private static List<TransportProtocol> foundDevices = new List<TransportProtocol>();
 
         private static async Task DiscoverAsync()
         {
@@ -80,7 +80,7 @@ namespace BluetoothUwpDesktop
 
             deviceWatcher.Stop();
 
-            foreach (var c in Chunkers)
+            foreach (var c in foundDevices)
             {
                 var m = new com.intercede.BluetoothSmartcard.Commands.SignatureRequest
                 {
@@ -99,10 +99,11 @@ namespace BluetoothUwpDesktop
 
             Console.ReadKey();
 
-            foreach(var c in Subscriptions)
+            foreach(var c in foundDevices)
             {
-                await c.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
-                Log.Logger.Information("Unsubscribed from {id}", c.Uuid);
+                c.Dispose();
+                //await c.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
+                //Log.Logger.Information("Unsubscribed from {id}", c.Uuid);
             }
 
             Console.ReadKey();
@@ -153,20 +154,26 @@ namespace BluetoothUwpDesktop
 
                 foreach (var c in characteristics.Characteristics)
                 {
-                    if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                    if (c.Uuid == Guid.Parse("{0000b715-0000-1000-8000-00805f9b34fb}"))
                     {
-                        await c.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-
-                        c.ValueChanged += (_, changedArgs) =>
-                        {
-                            var bytes = changedArgs.CharacteristicValue.ToArray();
-                            Log.Logger.Information("{name} Event! {data}", args.Name, bytes.AsHex());
-                        };
-
-                        Subscriptions.Add(c);
-
-                        Log.Logger.Information("{name} Subscribed to {id}", args.Name, c.Uuid);
+                        var transportProtocol = await TransportProtocol.Create(c);
+                        foundDevices.Add(transportProtocol);
                     }
+
+                    //if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                    //{
+                    //    await c.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+
+                    //    c.ValueChanged += (_, changedArgs) =>
+                    //    {
+                    //        var bytes = changedArgs.CharacteristicValue.ToArray();
+                    //        Log.Logger.Information("{name} Event! {data}", args.Name, bytes.AsHex());
+                    //    };
+
+                    //    //Subscriptions.Add(c);
+
+                    //    Log.Logger.Information("{name} Subscribed to {id}", args.Name, c.Uuid);
+                    //}
                 }
             }
             catch (Exception e)

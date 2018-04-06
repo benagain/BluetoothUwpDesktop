@@ -83,6 +83,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeriLogEnricher.cs" />
+    <Compile Include="TransportProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -91,6 +92,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>:: copy "$(TargetDir)*" \\172.26.2.23\c$\Workspace\btle</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)*" \\172.26.2.23\c$\Workspace\btle</PostBuildEvent>
   </PropertyGroup>
 </Project>

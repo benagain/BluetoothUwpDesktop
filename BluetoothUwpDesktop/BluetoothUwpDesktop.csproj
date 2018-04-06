@@ -88,4 +88,7 @@
     <None Include="readme.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)*" \\172.26.2.23\c$\Workspace\btle</PostBuildEvent>
+  </PropertyGroup>
 </Project>

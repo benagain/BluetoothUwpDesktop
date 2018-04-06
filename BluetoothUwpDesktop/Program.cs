@@ -26,7 +26,7 @@ namespace BluetoothUwpDesktop
             }
             catch (System.Exception e)
             {
-                System.Console.WriteLine(e.Message);
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -47,13 +47,13 @@ namespace BluetoothUwpDesktop
 
         private static List<GattCharacteristic> Subscriptions = new List<GattCharacteristic>();
 
-        private static async System.Threading.Tasks.Task DiscoverAsync()
+        private static async Task DiscoverAsync()
         {
             string[] requestedProperties =
             {
                 "System.Devices.Aep.DeviceAddress",
                 "System.Devices.Aep.IsConnected",
-                "System.Devices.Aep.Bluetooth.Le.IsConnectable"
+                //"System.Devices.Aep.Bluetooth.Le.IsConnectable"
             };
 
             // BT_Code: Example showing paired and non-paired in a single query.
@@ -68,7 +68,7 @@ namespace BluetoothUwpDesktop
 
             deviceWatcher.Added += DeviceWatcher_AddedAsync;
             deviceWatcher.Updated += DeviceWatcher_Updated;
-            deviceWatcher.Removed += DeviceWatcher_Removed;
+            //deviceWatcher.Removed += DeviceWatcher_Removed;
             deviceWatcher.EnumerationCompleted += DeviceWatcher_EnumerationCompleted;
             deviceWatcher.Stopped += DeviceWatcher_Stopped;
 
@@ -105,55 +105,62 @@ namespace BluetoothUwpDesktop
 
         private static async void DeviceWatcher_AddedAsync(DeviceWatcher sender, DeviceInformation args)
         {
-            Log.Logger.Information("{id} {name}", args.Id, args.Name);
-
-            var bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(args.Id);
-            if(bluetoothLeDevice == null)
+            try
             {
-                Log.Logger.Warning("Couldn't connect to {name}", args.Name);
-                return;
-            }
+                Log.Logger.Information("{id} {name}", args.Id, args.Name);
 
-            Log.Logger.Information("Connected to {name}", args.Name);
+                if (args.Name != "iPhone 6+") return;
 
-            var result = await bluetoothLeDevice.GetGattServicesAsync(BluetoothCacheMode.Uncached);
-            if(result.Status != GattCommunicationStatus.Success)
-            {
-                Log.Logger.Warning("Couldn't services on {name}", args.Name);
-                return;
-            }
-
-            Log.Logger.Information("Device services: {services}", result.Services.Select(x => x.Uuid));
-
-            var service = result.Services.FirstOrDefault(x => x.Uuid == ServiceId);
-            if (service == null)
-            {
-                Log.Logger.Warning("Couldn't find our service on {name}", args.Name);
-                return;
-            }
-
-            Log.Logger.Information("Found  service");
-
-            var characteristics = await service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
-
-            Log.Logger.Information("Found {characteristics}", characteristics.Characteristics.Select(x => x.Uuid));
-
-            foreach(var c in characteristics.Characteristics)
-            {
-                if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                var bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(args.Id);
+                if (bluetoothLeDevice == null)
                 {
-                    await c.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-
-                    c.ValueChanged += (_, changedArgs) =>
-                    {
-                        var bytes = changedArgs.CharacteristicValue.ToArray();
-                        Log.Logger.Information("Event! {data}", bytes.AsHex());
-                    };
-
-                    Subscriptions.Add(c);
-
-                    Log.Logger.Information("Subscribed to {id}", c.Uuid);
+                    Log.Logger.Warning("Couldn't connect to {name}", args.Name);
+                    return;
                 }
+
+                Log.Logger.Information("Connected to {name}", args.Name);
+
+                var result = await bluetoothLeDevice.GetGattServicesAsync(BluetoothCacheMode.Uncached);
+                if (result.Status != GattCommunicationStatus.Success)
+                {
+                    Log.Logger.Warning("Couldn't services on {name}", args.Name);
+                    return;
+                }
+
+                Log.Logger.Information("({name}) Device services: {services}", args.Name, result.Services.Select(x => x.Uuid));
+
+                var service = result.Services.FirstOrDefault(x => x.Uuid == ServiceId);
+                if (service == null)
+                {
+                    Log.Logger.Warning("Couldn't find our service on {name}", args.Name);
+                    return;
+                }
+
+                var characteristics = await service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
+
+                Log.Logger.Information("{name} Found {characteristics}", args.Name, characteristics.Characteristics.Select(x => x.Uuid));
+
+                foreach (var c in characteristics.Characteristics)
+                {
+                    if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                    {
+                        await c.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+
+                        c.ValueChanged += (_, changedArgs) =>
+                        {
+                            var bytes = changedArgs.CharacteristicValue.ToArray();
+                            Log.Logger.Information("{name} Event! {data}", args.Name, bytes.AsHex());
+                        };
+
+                        Subscriptions.Add(c);
+
+                        Log.Logger.Information("{name} Subscribed to {id}", args.Name, c.Uuid);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e, "Error with {name} ", args.Name);
             }
 
 

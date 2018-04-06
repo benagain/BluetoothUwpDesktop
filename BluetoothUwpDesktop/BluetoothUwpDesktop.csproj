@@ -77,8 +77,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chunker.cs" />
     <Compile Include="Credentialservice.cs" />
+    <Compile Include="PacketBuilder.cs" />
+    <Compile Include="PacketChunker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeriLogEnricher.cs" />

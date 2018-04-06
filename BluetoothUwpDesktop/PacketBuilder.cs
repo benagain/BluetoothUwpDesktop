@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BluetoothTransportProtocolTests
+namespace Bluetooth.Transport
 {
     public class PacketEventArgs : EventArgs
     {
@@ -20,7 +20,7 @@ namespace BluetoothTransportProtocolTests
 
         public event EventHandler<PacketEventArgs> OnCompletedPacket;
 
-        internal void AddBlock(byte[] block)
+        public void AddBlock(byte[] block)
         {
             if (block.SequenceEqual(System.Text.Encoding.UTF8.GetBytes("EOM")))
             {
@@ -32,13 +32,13 @@ namespace BluetoothTransportProtocolTests
             }
         }
 
-        internal byte[] GetCompletedPacket()
+        public byte[] GetCompletedPacket()
         {
             int count = blocks.Sum(x => x.Length);
             byte[] fullPacket = new byte[count];
             int destinationIndex = 0;
 
-            foreach(var block in blocks)
+            foreach (var block in blocks)
             {
                 Array.Copy(block, 0, fullPacket, destinationIndex, block.Length);
                 destinationIndex += block.Length;

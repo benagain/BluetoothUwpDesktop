@@ -45,17 +45,4 @@ namespace BluetoothTransportProtocolTests
             }
         }
     }
-
-
-
-
-
-
-    //[Fact]
-    //public void MyTestMethod2()
-    //{
-    //    var builder = new PacketBuilder();
-    //    builder.OnCompletedPacket += x => { /* do something */}
-
-    //}
 }

@@ -1,4 +1,5 @@
-﻿using Google.Protobuf;
+﻿using Bluetooth.Transport;
+using Google.Protobuf;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,7 @@ namespace BluetoothUwpDesktop
         }
 
         private static List<GattCharacteristic> Subscriptions = new List<GattCharacteristic>();
+        private static List<PacketChunker> Chunkers = new List<PacketChunker>();
 
         private static async Task DiscoverAsync()
         {
@@ -78,7 +80,7 @@ namespace BluetoothUwpDesktop
 
             deviceWatcher.Stop();
 
-            foreach (var c in Subscriptions)
+            foreach (var c in Chunkers)
             {
                 var m = new com.intercede.BluetoothSmartcard.Commands.SignatureRequest
                 {
@@ -89,7 +91,10 @@ namespace BluetoothUwpDesktop
                 m.WriteTo(stream);
 
                 Log.Logger.Information("=> {data}", bytes.AsHex());
-                await c.WriteValueAsync(bytes.AsBuffer(), GattWriteOption.WriteWithResponse);
+
+                //c.WriteEverything(bytes);
+
+                //await c.WriteValueAsync(bytes.AsBuffer(), GattWriteOption.WriteWithResponse);
             }
 
             Console.ReadKey();
@@ -123,7 +128,7 @@ namespace BluetoothUwpDesktop
                 var result = await bluetoothLeDevice.GetGattServicesAsync(BluetoothCacheMode.Uncached);
                 if (result.Status != GattCommunicationStatus.Success)
                 {
-                    Log.Logger.Warning("Couldn't services on {name}", args.Name);
+                    Log.Logger.Warning("Couldn't get services on {name}: {status}", args.Name, result.Status);
                     return;
                 }
 
@@ -136,9 +141,15 @@ namespace BluetoothUwpDesktop
                     return;
                 }
 
+                const int MTU_LINK_LAYER_HEADER_SIZE = 3;
+
+                var mtu = service.Session.MaxPduSize - MTU_LINK_LAYER_HEADER_SIZE;
+                Log.Logger.Information("{name} {service} PDU: {pdu}", args.Name, service.Uuid, mtu);
+
                 var characteristics = await service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
 
                 Log.Logger.Information("{name} Found {characteristics}", args.Name, characteristics.Characteristics.Select(x => x.Uuid));
+
 
                 foreach (var c in characteristics.Characteristics)
                 {

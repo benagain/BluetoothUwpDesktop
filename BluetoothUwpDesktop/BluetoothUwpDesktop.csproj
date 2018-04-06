@@ -77,6 +77,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chunker.cs" />
     <Compile Include="Credentialservice.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +90,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)*" \\172.26.2.23\c$\Workspace\btle</PostBuildEvent>
+    <PostBuildEvent>:: copy "$(TargetDir)*" \\172.26.2.23\c$\Workspace\btle</PostBuildEvent>
   </PropertyGroup>
 </Project>
